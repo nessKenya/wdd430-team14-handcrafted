@@ -3,7 +3,7 @@
 * Week 2 Lead Student: Nelson Muchonji Bifwoli
 * Members:
 1. Nelson Muchonji Bifwoli
-2.Quelitho Gabriel
+2. Quelitho Gabriel
 3. Mawuli Ayikpa
 4. Isaac Hooper
 5. Pius Mukisa
