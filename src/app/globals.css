@@ -12,12 +12,12 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
+/*@media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
-}
+}*/
 
 body {
   background: var(--background);
@@ -30,7 +30,8 @@ body {
 }
 
 .btn {
-    @apply bg-black text-white text-sm w-36 mt-4 py-2 px-4 rounded font-bold cursor-pointer;
+    @apply bg-black text-white text-sm w-36 my-4 py-4 px-4 rounded-full font-bold cursor-pointer;
+    @apply w-full min-w-40 md:w-auto;
 }
 
 .btn:hover, .btn-alt:hover {
@@ -38,5 +39,36 @@ body {
 }
 
 .btn-alt {
-    @apply bg-violet-500 text-white text-sm w-36 mt-4 py-2 px-4 rounded font-bold cursor-pointer;
+    @apply bg-violet-700 text-white text-sm w-36 my-4 py-4 px-4 rounded-full font-bold cursor-pointer;
+    @apply w-full min-w-40 md:w-auto;
+}
+
+/*forms*/
+input, textarea {
+    @apply w-full px-6 py-2 border-1 border-violet-500 my-2 rounded-full bg-violet-200;
+    @apply focus:outline-none focus:ring-1 focus:ring-violet-500;
+}
+
+textarea {
+    @apply rounded-3xl;
+}
+
+label {
+    @apply text-violet-900 font-bold;
+}
+
+.form-item {
+    @apply flex flex-col my-3;
+}
+
+.record {
+    @apply flex justify-between items-center gap-1 rounded-3xl;
+}
+
+.record-header {
+    @apply font-bold text-white bg-violet-700 text-center px-4 py-4 rounded-full mb-4;
+}
+
+.record-item {
+    @apply my-2 px-4 py-1 h-8 rounded bg-violet-200;
 }
