@@ -30,19 +30,22 @@ export default function RootLayout({
         <header className="hidden md:block">
           <nav className="flex justify-between items-end h-20 pb-2 border-b-1 border-b-violet-300">
             <div className="flex-1">
-              <a href="/products" className="mr-16">All</a>
-              <a href="/products/favorites">Favorites</a>
+              <a href="/items" className="mr-16">All</a>
+              <a href="/items/favorites">Favorites</a>
             </div>
 
             <a href="/" className="flex-1 font-black text-center uppercase">Hand Crafted Haven</a>
 
-            <a href="/auth/login" className=" flex-1 text-right">Login</a>
+            <div className="flex-1 text-right">
+              <a href="/seller/items" className="mr-16">My Products</a>
+              <a href="/auth/login">Login</a>
+            </div>
           </nav>
         </header>
         <main>
           {children}
         </main>
-        <footer className="bg-violet-500 text-white p-8">
+        <footer className="bg-violet-700 text-white p-8">
           <p className="font-bold italic">Handcrafted Haven 2025</p>
         </footer>
       </body>

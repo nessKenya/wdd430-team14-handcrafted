@@ -1,14 +1,13 @@
-import Image from "next/image";
 import React from "react";
 
 export default function Rating(props: { rating: number }) {
   return (
-    <div className="flex gap-0.5">
+    <div className="flex gap-0.5 justify-center">
       {[1, 2, 3, 4, 5].map((i) => (
         i <= props.rating ?
-        <StarFilled key={i} className="w-4 h-4 text-amber-500" />
+        <StarFilled key={i} className="w-5 h-5 text-amber-500" />
         :
-        <Star key={i} className={"w-4 h-4 text-gray-700"} />
+        <Star key={i} className={"w-5 h-5 text-gray-700"} />
       ))}
     </div>
   );
