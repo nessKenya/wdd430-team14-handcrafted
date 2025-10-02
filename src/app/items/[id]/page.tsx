@@ -78,7 +78,7 @@ export default function ProductDetails() {
         <div className="border-b-1 border-violet-300 pb-8 md:border-b-0">
           <p className="font-black text-xl">Share your experience</p>
           <p className="font-medium text-gray-600 my-2">
-            Your unique perspective, lessons and moments of triumph can resonate deeply with others. Don't hesitate
+            Your unique perspective, lessons and moments of triumph can resonate deeply with others. Don&apos;t hesitate
             to contribute your story.
           </p>
           <ReviewModal/>
