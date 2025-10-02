@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 // Mock DB (replace with real database)
-let products = [
+const products = [
   { id: "1", name: "Handmade Vase", price: 50, image: "/images/vase.jpg", archived: false },
   { id: "2", name: "Woven Basket", price: 30, image: "/images/basket.jpg", archived: false },
 ];
