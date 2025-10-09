@@ -1,19 +1,16 @@
 import ItemCard from "@/components/item-card";
+import { getItems } from "../lib/actions";
 
-export default function Products() {
+export default async function Items() {
+  const items = await getItems();
+
   return <>
     <section>
-      <div className="text-2xl font-black my-10">
+      <div className="text-2xl font-black my-10 font-heading">
         Craft Collection.
       </div>
       <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 my-8">
-
-        {
-          new Array(24)
-            .fill('prod')
-            .map((product, i) => <ItemCard key={`${product}-${i}`} productId={`${product}`} />)
-        }
-
+        { items.map((item) => <ItemCard key={`item-${item.id}`} item={item} />)}
       </div>
     </section>
   </>

@@ -1,10 +1,12 @@
+import { signup } from "@/app/lib/actions";
+
 export default function SignUp() {
   return <>
-    <section className="w-11/12 lg:w-1/2 mx-auto h-11/12">
-      <div className="my-12">
-        LOGO
+    <section className="w-11/12 lg:w-1/2 mx-auto h-11/12 pt-16">
+      <div className="p-6 rounded-3xl text-3xl text-center font-black bg-violet-900 text-white animate-bounce">
+        Signup to showcase your crafted items.
       </div>
-      <form action="" className="my-12">
+      <form action={signup} className="my-12">
         <div className="form-item">
           <label htmlFor="first_name">First Name</label>
           <input id='first_name' name='first_name' type="text" required />

@@ -1,31 +1,33 @@
 import Image from "next/image";
 import Link from "next/link";
 import Rating from "./rating";
+import { Item } from "@/types";
 
-export default function ItemCard(props: {productId: string}) {
+export default function ItemCard(props: {item: Item}) {
+  const { item } = props;
   return <div>
-    <Link href={`/items/${props.productId}`}>
+    <Link href={`/items/${item.id}`}>
       <div className="p-card">
         <div className="relative w-full h-64">
           <Image
-            src="/stool.png"
+            src={item.img_url ? item.img_url: "/stool.png"}
             alt="My photo"
             fill
             className="rounded"
           />
         </div>
-        <p className="font-extrabold mt-4">Item XYZ</p>
+        <p className="font-extrabold mt-4 capitalize font-heading">{item.name}</p>
         <div className="flex flex-row justify-between">
           <small className="italic">by John Doe.</small>
-          <Rating rating={1} />
+          <Rating rating={item.rating} />
         </div>
       </div>
     </Link>
     <div className="flex justify-between mt-4">
-      <span className="font-black mt-1">$25.90</span>
+      <span className="font-black mt-1 font-number">${item.price}</span>
       <span className="flex justify-between items-center cursor-pointer mr-1">
         <Favorite className="w-6 h-6 text-gray-500"/>
-        <span className="ml-1 text-gray-500 text-sm italic">16 <span className="italic text-sm">favs</span></span>
+        <span className="ml-1 text-gray-500 text-sm italic">{item.favs} <span className="italic text-sm">favs</span></span>
       </span>
     </div>
   </div>
