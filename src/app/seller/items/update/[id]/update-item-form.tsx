@@ -20,7 +20,7 @@ const [imgPath, setImgPath] = useState(item?.img_url || "");
     });
 
     const data = await res.json();
-    setImgPath(data.filePath);
+    setImgPath(data.publicUrl);
   }
 
   return (
