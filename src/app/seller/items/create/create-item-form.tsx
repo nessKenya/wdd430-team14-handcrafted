@@ -21,7 +21,7 @@ export default function CreateItemForm() {
     });
 
     const data = await res.json();
-    setImgPath(data.filePath);
+    setImgPath(data.publicUrl);
   }
 
   return  <form action={createItem} className="my-12">

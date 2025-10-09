@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import fs from "fs/promises";
-import path from "path";
+import { Storage } from "@google-cloud/storage";
 
 export async function POST(req: NextRequest) {
   const formData = await req.formData();
@@ -13,13 +12,33 @@ export async function POST(req: NextRequest) {
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
 
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
-  await fs.mkdir(uploadDir, { recursive: true });
+  // Initialize Google Cloud Storage
+  const storage = new Storage({
+        credentials: JSON.parse(process.env.SERVICE_ACCOUNT!),
+        projectId: 'wolf-476978',
+  });
 
+  const bucket = storage.bucket(process.env.GCS_BUCKET_NAME!);
+
+  // Use same filename pattern
   const filename = `${Date.now()}-${file.name}`;
-  const filePath = path.join(uploadDir, filename);
+  const blob = bucket.file(filename);
 
-  await fs.writeFile(filePath, buffer);
+  // Upload file to GCS
+  await blob.save(buffer, {
+    resumable: false,
+    contentType: file.type,
+  });
 
-  return NextResponse.json({ filePath: `/uploads/${filename}` });
+  // Make the file publicly accessible
+  await blob.makePublic();
+
+  // Return same structure as before
+  const filePath = `/ness_uploads/${filename}`;
+  const publicUrl = `https://storage.googleapis.com/${bucket.name}/${filename}`;
+
+  // NOTE:
+  // You can continue to use filePath in your UI unchanged.
+  // If needed, use the publicUrl internally for actual access.
+  return NextResponse.json({ filePath, publicUrl });
 }
