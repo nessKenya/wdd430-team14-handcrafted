@@ -1,25 +1,17 @@
-export default function UpdateItem() {
+import { getItem } from "@/app/lib/actions";
+import UpdateItemForm from "./update-item-form";
+
+export default async function UpdateItemPage({ params }: { params: { id: string } }) {
+  const { id } = await params;
+  const item = await getItem(Number(id))
+
+  if (!item) {
+    return <p className="text-center mt-10 text-rose-500">Item not found.</p>;
+  }
+
   return <>
     <section className="w-11/12 lg:w-1/2 mx-auto h-11/12">
-      <form action="" className="my-12">
-        <div className="form-item">
-          <label htmlFor="name">Name</label>
-          <input id='name' name='name' type="text" required />
-        </div>
-        <div className="form-item">
-          <label htmlFor="price">Price</label>
-          <input id='price' name='price' type="number" required />
-        </div>
-        <div className="form-item">
-          <label htmlFor="description">Description</label>
-          <textarea id='description' name='description' rows={4} required></textarea>
-        </div>
-        <div className="form-item">
-          <label htmlFor="img">Photo/Picture</label>
-          <input id='img' name='img' type="file" required />
-        </div>
-        <button className="btn-alt" type="submit">Update Item</button>
-      </form>
+      <UpdateItemForm item={item} />
     </section>
   </>
 }
