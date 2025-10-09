@@ -173,7 +173,7 @@ export async function updateItem(formData: FormData) {
 
   if (!id || !name || isNaN(price)) throw new Error("Invalid input");
 
-  const sellerId = session.user.id;
+  const sellerId = session.user.id as string;
 
   await sql`
     UPDATE items
