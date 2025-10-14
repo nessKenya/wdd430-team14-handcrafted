@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Rating from "./rating";
-import { FavoriteFilled } from "./item-card";
-import { Item } from '@/types/item';
+import { Item } from '@/types';
 
 export default function ItemRecord(props: {item: Item}) {
   return <div className="record text-center">
