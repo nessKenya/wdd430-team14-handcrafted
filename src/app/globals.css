@@ -70,13 +70,29 @@ label {
 }
 
 .record {
-    @apply flex justify-between items-center gap-1 rounded-3xl;
+    @apply flex justify-between items-center gap-1 rounded-3xl w-fit md:w-auto;
 }
 
 .record-header {
-    @apply font-bold text-white bg-violet-700 text-center px-4 py-4 rounded-full mb-4;
+    @apply font-bold text-white bg-violet-700 text-center px-4 py-4 rounded-full mb-4 w-fit md:w-auto;
 }
 
 .record-item {
-    @apply my-2 px-4 py-1 h-8 rounded bg-violet-200;
+    @apply my-2 px-4 py-1 min-h-8 rounded bg-violet-200;
+}
+
+.record-item-order {
+    @apply my-2 px-4 py-1 h-24 rounded bg-violet-200;
+}
+
+.profile-record {
+    @apply grid grid-cols-[140px_1fr] gap-2;
+}
+
+.profile-record > span {
+    @apply first:font-bold first:bg-violet-100;
+}
+
+.nav-item {
+    @apply font-semibold mr-4 md:mr-16 hover:underline;
 }

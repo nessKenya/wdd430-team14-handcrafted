@@ -1,9 +1,15 @@
+import { Metadata } from "next";
 import Image from "next/image";
 import Rating, { StarFilled } from "@/components/rating";
 import ReviewCard from "./review-card";
 import ReviewModal from "./review-modal-form";
 import { getItem } from "@/app/lib/actions";
 import RatingsBar from "./ratings-bar";
+import OrderModal from "./order-modal";
+
+export const metadata: Metadata = {
+  title: "HandCraftedHeaven | Item",
+};
 
 export default async function ProductDetails({ params }: { params: { id: string } }) {
   const { id } = await params;
@@ -70,7 +76,7 @@ export default async function ProductDetails({ params }: { params: { id: string 
             <option value="1">4</option>
             <option value="1">5</option>
           </select>
-          <button className="btn">Order Item</button>
+          <OrderModal itemId={ item.id } />
         </div>
       </div>
     </section>
@@ -88,7 +94,7 @@ export default async function ProductDetails({ params }: { params: { id: string 
         </div>
         <div className="flex flex-col items-center">
           <span className="text-2xl mb-2">
-            <span className="font-black">{item.reviews?.length}</span><span className="font-extralight text-gray-500"> Reviews</span>
+            <span className="font-black">{item.reviews?.length}</span><span className="text-gray-500"> Reviews</span>
           </span>
           <Rating rating={item.rating} />
         </div>

@@ -24,7 +24,7 @@ export default function RatingsBar({ reviews }: { reviews?: Review[] }) {
 }
 
 function groupReviewsByRating(reviews?: Review[]) {
-  const grouped: Record<number,number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
+  const grouped: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
 
   reviews?.forEach(r => grouped[r.rating]++)
 

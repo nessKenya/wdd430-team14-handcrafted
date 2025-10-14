@@ -8,7 +8,7 @@ import { revalidatePath } from 'next/cache';
 import { sql } from '@/app/lib/data';
 import { auth } from '@/../auth';
 
-import { Item, Review } from '@/types';
+import { Item, Review, Profile, SellerOrder } from '@/types';
 
 // auth actions
 export async function authenticate(prevState: string | undefined, formData: FormData) {
@@ -67,6 +67,79 @@ export async function logout() {
   });
 }
 
+export async function getProfile() {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    throw new Error('Unauthorized');
+  }
+
+  const sellerId = session.user.id;
+
+  try {
+    const [seller] = await sql`
+      SELECT
+        s.first_name,
+        s.last_name,
+        s.email,
+        p.address,
+        p.phone
+      FROM sellers s
+      LEFT JOIN profiles p ON p.seller_id = s.id
+      WHERE s.id = ${sellerId};
+    `;
+
+    if (!seller) {
+      throw new Error('Profile not found');
+    }
+
+    return seller;
+  } catch (error) {
+    console.error('Error fetching profile:', error);
+    throw new Error('Failed to fetch profile');
+  }
+}
+
+export async function updateProfile(formData: FormData) {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    throw new Error('Unauthorized');
+  }
+
+  const sellerId = session.user.id as string;
+
+  const firstName = formData.get('first_name') as string;
+  const lastName = formData.get('last_name') as string;
+  const email = formData.get('email') as string;
+  const address = formData.get('address') as string | null;
+  const phone = formData.get('phone') as string | null;
+
+    // Update sellers table
+    await sql`
+      UPDATE sellers
+      SET
+        first_name = ${firstName},
+        last_name = ${lastName},
+        email = ${email},
+        updated_at = NOW()
+      WHERE id = ${sellerId};
+    `;
+
+    // Update or insert profile record
+    await sql`
+      INSERT INTO profiles (seller_id, address, phone)
+      VALUES (${sellerId}, ${address || null}, ${phone || null})
+      ON CONFLICT (seller_id)
+      DO UPDATE SET
+        address = EXCLUDED.address,
+        phone = EXCLUDED.phone,
+        updated_at = NOW();
+    `;
+
+    redirect('/seller/profile');
+}
+
 // item actions
 export async function createItem(formData: FormData) {
   // Get session
@@ -112,6 +185,37 @@ export async function getItems(): Promise<Item[]> {
   } catch (error) {
     console.error("Error fetching items:", error);
     throw new Error("Failed to fetch items");
+  }
+}
+
+export async function getItemsByIds(ids: number[]): Promise<Item[]> {
+  if (!ids || ids.length === 0) return []
+  try {
+    const items = await sql<Item[]>`
+      SELECT *
+      FROM items
+      WHERE id = ANY(${ids})
+      ORDER BY created_at DESC
+    `
+    return items
+  } catch (error) {
+    console.error('Error fetching items by ids:', error)
+    throw new Error('Failed to fetch items by ids')
+  }
+}
+
+export async function favoriteItem(itemId: number): Promise<Item | null> {
+  try {
+    const updated = await sql<Item[]>`
+      UPDATE items
+      SET favs = favs + 1
+      WHERE id = ${itemId}
+      RETURNING *
+    `
+    return updated[0] ?? null
+  } catch (error) {
+    console.error('Error incrementing favs:', error)
+    throw new Error('Failed to favorite item')
   }
 }
 
@@ -180,7 +284,7 @@ export async function updateItem(formData: FormData) {
     SET name = ${name},
         price = ${price},
         description = ${description},
-        img_url = ${img_url},
+        img_url = ${img_url ?? null},
         updated_at = NOW()
     WHERE id = ${id} AND seller_id = ${sellerId};
   `;
@@ -222,6 +326,80 @@ export async function postReview(formData: FormData) {
 
   // refetch item data
   revalidatePath(`/items/${item_id}`);
+}
+
+// order actions
+export async function makeOrder(formData: FormData) {
+  const itemId = Number(formData.get('itemId'));
+  const customerName = formData.get('customerName') as string;
+  const address = formData.get('address') as string;
+  const phoneNumber = formData.get('phoneNumber') as string;
+  const quantity = Number(formData.get('quantity'));
+  const comment = formData.get('comment') as string | null;
+
+  if (!itemId || !customerName || !address || !phoneNumber || !quantity) {
+    throw new Error('Missing required fields');
+  }
+
+  try {
+    const [order] = await sql`
+      INSERT INTO orders (
+        item_id,
+        customer_name,
+        address,
+        phone_number,
+        quantity,
+        comment
+      )
+      VALUES (
+        ${itemId},
+        ${customerName},
+        ${address},
+        ${phoneNumber},
+        ${quantity},
+        ${comment || null}
+      )
+      RETURNING *;
+    `;
+    return { success: true, order };
+  } catch (error) {
+    console.error('Error creating order:', error);
+    return { success: false, error: 'Failed to create order' };
+  }
+}
+
+export async function getOrders(): Promise<SellerOrder[]> {
+  const session = await auth();
+
+  if (!session?.user?.id) {
+    throw new Error('Unauthorized');
+  }
+
+  const sellerId = session.user.id as string;
+
+  try {
+    const orders = await sql<SellerOrder[]>`
+      SELECT
+        o.id AS order_id,
+        o.customer_name,
+        o.address,
+        o.phone_number,
+        o.quantity,
+        o.comment,
+        o.created_at,
+        i.name AS item_name,
+        i.price AS item_price
+      FROM orders o
+      JOIN items i ON o.item_id = i.id
+      WHERE i.seller_id = ${sellerId}
+      ORDER BY o.created_at DESC;
+    `;
+
+    return orders;
+  } catch (error) {
+    console.error('Error fetching orders:', error);
+    throw new Error('Failed to fetch orders');
+  }
 }
 
 // schema creation
@@ -270,6 +448,19 @@ export async function createSchema () {
           rating INT NOT NULL CHECK (rating >= 1 AND rating <= 5),
           review_text TEXT NOT NULL,
           created_at TIMESTAMP DEFAULT NOW()
+      );
+    `
+    await sql`
+      CREATE TABLE orders (
+        id SERIAL PRIMARY KEY,
+        item_id INT NOT NULL REFERENCES items(id) ON DELETE CASCADE,
+        customer_name VARCHAR(150) NOT NULL,
+        address TEXT NOT NULL,
+        phone_number VARCHAR(50) NOT NULL,
+        quantity INT NOT NULL CHECK (quantity > 0),
+        comment TEXT,
+        created_at TIMESTAMP DEFAULT NOW(),
+        updated_at TIMESTAMP DEFAULT NOW()
       );
     `
 }

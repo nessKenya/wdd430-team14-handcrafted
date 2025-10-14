@@ -42,3 +42,16 @@ CREATE TABLE reviews (
     review_text TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT NOW()
 );
+
+-- orders
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    item_id INT NOT NULL REFERENCES items(id) ON DELETE CASCADE,
+    customer_name VARCHAR(150) NOT NULL,
+    address TEXT NOT NULL,
+    phone_number VARCHAR(50) NOT NULL,
+    quantity INT NOT NULL CHECK (quantity > 0),
+    comment TEXT,
+    created_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
+);

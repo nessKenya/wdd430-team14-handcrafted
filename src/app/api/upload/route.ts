@@ -34,11 +34,11 @@ export async function POST(req: NextRequest) {
   await blob.makePublic();
 
   // Return same structure as before
-  const filePath = `/ness_uploads/${filename}`;
+  const filePath = `/uploads/${filename}`;
   const publicUrl = `https://storage.googleapis.com/${bucket.name}/${filename}`;
 
   // NOTE:
-  // You can continue to use filePath in your UI unchanged.
+  // You can continue to use `filePath` in your UI unchanged.
   // If needed, use the publicUrl internally for actual access.
   return NextResponse.json({ filePath, publicUrl });
 }
