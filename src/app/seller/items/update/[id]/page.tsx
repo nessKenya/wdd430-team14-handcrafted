@@ -1,5 +1,10 @@
+import { Metadata } from "next";
 import { getItem } from "@/app/lib/actions";
 import UpdateItemForm from "./update-item-form";
+
+export const metadata: Metadata = {
+  title: "HandCraftedHeaven | Update Item",
+};
 
 export default async function UpdateItemPage({ params }: { params: { id: string } }) {
   const { id } = await params;

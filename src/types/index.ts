@@ -39,3 +39,23 @@ export interface Review {
   review_text: string;
   created_at: Date;
 }
+
+export interface SellerOrder {
+  order_id: number;
+  customer_name: string;
+  address: string;
+  phone_number: string;
+  quantity: number;
+  comment?: string | null;
+  created_at: string;
+  item_name: string;
+  item_price: number;
+}
+
+export interface Profile {
+  first_name: string;
+  last_name: string;
+  email: string;
+  address: string | null;
+  phone: string | null;
+};

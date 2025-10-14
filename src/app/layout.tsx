@@ -64,36 +64,48 @@ export default async function RootLayout({
   return (
     <html lang="en" className={`antialiased mx-2 md:mx-8 xl:mx-24 2xl:mx-36`}>
       <body className="font-body">
-        <header className="hidden md:block">
+        <div className="text-center md:hidden">
+          <Link href="/" className="flex-1 font-heading font-black text-center uppercase">Hand Crafted Haven</Link>
+        </div>
+        <header className="overflow-x-scroll">
           <nav className={`flex justify-between items-end h-20 pb-2 border-b-1 border-b-violet-300 font-heading`}>
-            <div className="flex-1">
-              <Link href="/items" className="mr-16">All</Link>
-              <Link href="/items/favorites">Favorites</Link>
-            </div>
 
-            <Link href="/" className="flex-1 font-black text-center uppercase">Hand Crafted Haven</Link>
+            {session?.user ? (
+              <>
+                <div className="flex justify-around flex-1">
+                  <Link href="/seller/items" className="nav-item">My Items</Link>
+                  <Link href="/seller/orders" className="nav-item">Orders</Link>
+                </div>
 
-            <div className="flex justify-end flex-1 text-right">
-              {session?.user ? (
+                <Link href="#" className="hidden md:block flex-1 font-black text-center uppercase">Hand Crafted Haven</Link>
+
+                <div className="flex justify-around flex-1">
+                  <Link href="/seller/profile" className="nav-item">Profile</Link>
+
+                  <form action={logout}>
+                    <button
+                      type="submit"
+                      className="hover:underline cursor-pointer"
+                    >
+                      Logout
+                    </button>
+                  </form>
+                </div>
+              </>) : (
                 <>
-                  <Link href="/seller/items" className="mr-16">My Items</Link>
-                  <div>
-                    <form action={logout}>
-                      <button
-                        type="submit"
-                        className="hover:underline cursor-pointer"
-                      >
-                        Logout
-                      </button>
-                    </form>
+                  <div className="flex justify-around flex-1">
+                    <Link href="/items" className="nav-item">All</Link>
+                    <Link href="/items/favorites" className="nav-item">Favorites</Link>
+                  </div>
+
+                  <Link href="/" className="hidden md:block flex-1 font-black text-center uppercase">Hand Crafted Haven</Link>
+
+                  <div className="flex justify-end flex-1 md:justify-end  md:text-right">
+                    <Link href="/auth/login" className="nav-item">Login</Link>
                   </div>
                 </>
-              ):(
-                <>
-                  <Link href="/auth/login">Login</Link>
-                </>
-              )}
-            </div>
+            )}
+
           </nav>
         </header>
         <main>

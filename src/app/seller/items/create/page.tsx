@@ -1,4 +1,9 @@
+import { Metadata } from "next";
 import CreateItemForm from "./create-item-form";
+
+export const metadata: Metadata = {
+  title: "HandCraftedHeaven | New Item",
+};
 
 export default function CreateItem() {
   return <>

@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import { updateItem } from "@/app/lib/actions";
-import { Item } from "@/types";
 
-export default function UpdateItemForm({ item }: { item?: Item }) {
+export default function UpdateItemForm({ item }: { item?: any }) {
 const [imgPath, setImgPath] = useState(item?.img_url || "");
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -58,7 +57,7 @@ const [imgPath, setImgPath] = useState(item?.img_url || "");
           id="description"
           name="description"
           rows={4}
-          defaultValue={item?.description || ""}
+          defaultValue={item?.description}
           required
         ></textarea>
       </div>

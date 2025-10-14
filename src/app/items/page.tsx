@@ -1,5 +1,10 @@
+import { Metadata } from "next";
 import ItemCard from "@/components/item-card";
 import { getItems } from "../lib/actions";
+
+export const metadata: Metadata = {
+  title: "HandCraftedHeaven | All Items",
+};
 
 export default async function Items() {
   const items = await getItems();
